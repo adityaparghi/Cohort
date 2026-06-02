@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
-
 const ObjectId = mongoose.ObjectId;
 
 const User = new Schema({
-    email: String,
+    email: {type: String, unique: true},
     password: String,
     name: String
 })
@@ -16,9 +14,8 @@ const Todo = new Schema({
     userId: ObjectId
 })  
 
-const UserModel = mongoose.model('users', User);
-
-const TodoModel = mongoose.model('todos', Todo);
+const UserModel = mongoose.model('users', User); //collections, something that we call function on
+const TodoModel = mongoose.model('todos', Todo); //collections
 
 module.exports = {
     UserModel: UserModel,

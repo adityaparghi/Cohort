@@ -1,14 +1,19 @@
+require('dotenv').config();
+const dns  = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const JWT_SECRET = "AdiLovesAlex";
 
+
 const {UserModel, TodoModel} = require("./db");
 
-mongoose.connect("mongodb://aditya:AcIoAh4b1MVhQlJt@cluster0.md0xg.mongodb.net/");
+mongoose.connect(process.env.MONGO_URL)// /database, but it will automatically create if it doesnt exots but we have to put the name here
+.then(() => console.log("MongoDB connected"))
+.catch(err => console.log(err)); 
 const app = express();
 app.use(express.json());
-
 
 app.post("/signup", async function(req, res){
     const email = req.body.email;
@@ -39,8 +44,9 @@ app.post("/signin",async function(req, res){
     console.log(user);
 
     if(user){
+        console.log(user._id);
         const token = jwt.sign({
-           id: user._id // _id will act as unique identifyr which will get from token
+           id: user._id.toString() // _id will act as unique identifyr which will get from token
         }, JWT_SECRET);
 
         res.json({
@@ -55,12 +61,45 @@ app.post("/signin",async function(req, res){
 
 });
 
-app.post("/todos", function(req, res){
+app.post("/todo",auth, function(req, res){ // this will need user_id in req from token -> middleware
+    const userId = req.userId;
+    const title = req.body.title;
 
+    TodoModel.create({
+        title,
+        userId
+    })
+
+    res.json({
+        userId: userId
+    })
 });
 
-app.get("/todos", function(req, res){
+app.get("/todos",auth, async function(req, res){
+    const userId = req.userId;
 
+    const todos = await TodoModel.find({
+        userId : userId
+    })
+
+     res.json({
+        todos
+    })
 });
+
+function auth(req, res, next){
+    const token = req.headers.token;
+    const verified = jwt.verify(token, JWT_SECRET); //encode Id and decode will get id
+    console.log(verified);
+
+    if(verified){
+        req.userId = verified.id;
+        next();
+    }else{
+        res.status(403).json({
+            message: "you aren't authenticated sir"
+        })
+    }
+}
 
 app.listen(3000)
