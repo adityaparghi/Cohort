@@ -1,14 +1,6 @@
-require('dotenv').config({
-    path: '../.env'
-});
-const dns  = require('dns');
-dns.setServers(['8.8.8.8', '8.8.4.4']);
 const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGO_COURSE);
-console.log("DB connected");
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
-
 
 const userSchema = new Schema({
     email: {type: String, unique: true},
