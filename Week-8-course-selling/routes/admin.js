@@ -8,12 +8,6 @@ adminRouter.post('/signup', function(req, res){
     })
 })
 
-adminRouter.post('/signin', function(req, res){
-    res.json({
-        message: "admin signin"
-    })
-})
-
 adminRouter.post('/course', function(req, res){
     res.json({
         message: "admin course"
