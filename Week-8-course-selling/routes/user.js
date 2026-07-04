@@ -1,15 +1,16 @@
-const {Router} = require("express");
-const { userModel } = require("../db");
+const { Router } = require("express");
+const { userModel, courseModel } = require("../db");
 const userRouter = Router();
 const jwt = require('jsonwebtoken');
-const {JWT_USER_PASSWORD} = require('../config');
+const { JWT_USER_PASSWORD } = require('../config');
 const { userMiddleware } = require("../middleware/user");
+const course = require("./course");
 
-userRouter.post('/signup', async function(req, res){    
-    const {email, password, firstName, lastName} = req.body;
+userRouter.post('/signup', async function (req, res) {
+    const { email, password, firstName, lastName } = req.body;
 
     try {
-       await userModel.create({
+        await userModel.create({
             email: email,
             password: password,
             firstName: firstName,
@@ -25,15 +26,15 @@ userRouter.post('/signup', async function(req, res){
     })
 })
 
-userRouter.post('/signin', async function(req, res){
-    const {email, password} = req.body;
+userRouter.post('/signin', async function (req, res) {
+    const { email, password } = req.body;
 
-  const user = await userModel.findOne({
+    const user = await userModel.findOne({
         email: email,
         password: password
     })
 
-    if(user){
+    if (user) {
         const token = jwt.sign({
             id: user._id
         }, JWT_USER_PASSWORD)
@@ -42,21 +43,26 @@ userRouter.post('/signin', async function(req, res){
             token: token
         })
 
-    }else{
+    } else {
         res.status(403).json({
-        message: "Incorrect credentials"
+            message: "Incorrect credentials"
         })
     }
 })
 
-userRouter.get('/purchases',userMiddleware, async function(req, res){
+userRouter.get('/purchases', userMiddleware, async function (req, res) {
     const userId = req.userId;
 
     const purchases = await purchaseModel.find({
         userId
     });
-     res.json({
+
+    const courseData = await courseModel.find({
+        _id: { $in: purchases.map(x => x.courseId) }
+    })
+    res.json({
         purchases,
+        courseData,
         message: "purchase endpoint"
     })
 })
