@@ -27,7 +27,7 @@ function App() {
       <button onClick={addPost}>Add post</button>
       <div style={{display: "flex", justifyContent: "center" }}>
         <div>
-          {postComponents}
+          {postComponents}// Array of react elements
         </div>
       </div>
     </div>
