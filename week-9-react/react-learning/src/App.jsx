@@ -1,43 +1,38 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from "react";
+import { PostComponent } from "./Post";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [posts, setPosts] = useState([]);
+
+  const postComponents = posts.map(post => <PostComponent
+    name={post.name}
+    subtitle={post.subtitle}
+    time={post.title}
+    image={post.image}
+    description={post.description}
+  />)
+
+  function addPost() {
+    setPosts([...posts, {
+      name: "Aditya",
+      subtitle: "10000 followers",
+      time: "2m ago",
+      image: "https://appx-wsb-gcp-mcdn.akamai.net.in/subject/2023-01-17-0.17044360120951185.jpg",
+      description: "What to know how to win big? Check out how these folks won $6000 in bounties."
+    }])
+  }
 
   return (
-    <div style={{backgroundColor:'#dfe6e9', height:"100vh"}}>
-      <div style={{display: "flex", justifyContent:'center'}}>
+    <div style={{background: "#dfe6e9", height: "100vh", }}>
+      <button onClick={addPost}>Add post</button>
+      <div style={{display: "flex", justifyContent: "center" }}>
         <div>
-          <div><PostComponent /><br /></div>
-          <div><PostComponent /><br /></div>
-          <div><PostComponent /><br /></div>
+          {postComponents}
         </div>
       </div>
     </div>
   )
 }
 
-const style = { width:200, backgroundColor: "white", borderRadius: 10, borderColor: "gray", borderWidth: 1, padding:20 }
-
-function PostComponent(){
-    return <div style={style}> 
-        <div style={{display:"flex"}}>
-            <img src="https://media.licdn.com/dms/image/v2/D4D03AQEa3XbCjS3AfA/profile-displayphoto-scale_400_400/B4DZ7WQfjGLAAg-/0/1781711109732?e=1789603200&v=beta&t=rqlucxpjzCgZqEGLAFZUaCc6pY9eMjbGa3MYuC2q29o"
-            style={{
-              width:30,
-              height:30,
-              borderRadius:20
-            }}/>
-            <div style={{fontSize:10, marginLeft:10}}>
-                <b>Aditya Parghi</b>
-                <div>500+ followers</div>
-                <div>12m</div>
-            </div>
-        </div>
-        <div style={{fontSize: 14}}>
-            What to know and what not to no one knows so just enjoy the life
-        </div>
-    </div>
-}
-
 export default App
+
