@@ -1,43 +1,30 @@
-
-import './App.css'
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { ErrorPage } from './ErrorPage';
+// better code
+import React, { useState, useRef } from 'react';
 
 function App() {
+  const [time, setTime] = useState(0);
+  const intervalRef = useRef(null);
 
-  return <div>
-    <BrowserRouter>
-      <Link to="/">Allen</Link>
-      | 
-      <Link to="/neet/online-coaching-class-11">Class 11</Link> 
-      | 
-      <Link to="/neet/online-coaching-class-12">Class 12</Link>
-      <Routes>
-        <Route path="/neet/online-coaching-class-11" element={<Class1Program />} />
-        <Route path="/neet/online-coaching-class-12" element={<Class2Program />} />
-        <Route path="/" element={<Landing />} />
-        <Route path='*' element={<ErrorPage />}/>
-      </Routes>
-    </BrowserRouter>
-  </div>
+  const startTimer = () => {
+    if (intervalRef.current !== null) return; // Already running, do nothing
+
+    intervalRef.current = setInterval(() => {
+      setTime((prevTime) => prevTime + 1);
+    }, 1000);
+  };
+
+  const stopTimer = () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+  };
+
+  return (
+    <div>
+      <h1>Timer: {time}</h1>
+      <button onClick={startTimer}>Start</button>
+      <button onClick={stopTimer}>Stop</button>
+    </div>
+  );
 }
 
-function Landing() {
-  return <div>
-    Welcome to fallen
-  </div>
-}
-
-function Class1Program() {
-  return <div>
-      Flerk programs
-  </div>
-}
-
-function Class2Program() {
-  return <div>
-      Dork programs
-  </div>
-}
-
-export default App
+export default App;
