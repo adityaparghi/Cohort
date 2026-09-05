@@ -3,6 +3,17 @@ import './App.css'
 
 const BulbContext = createContext(); //Step 1 defined the context
 
+export function BulbPorvider ({children}) { // bulbcontext wrapper whic willwrap the LightBulb
+  const [bulbOn, SetBulbOn] = useState(true);
+
+  return <BulbContext.Provider value={{
+    bulbOn:bulbOn,
+    SetBulbOn:SetBulbOn
+  }}>
+    {children}
+  </BulbContext.Provider>
+}
+
 function App() {
   const [bulbOn, SetBulbOn] = useState(true);
 
