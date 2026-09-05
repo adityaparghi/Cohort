@@ -1,15 +1,23 @@
 import { useState } from "react";
-import { usePrev } from "./hooks/use-Prev";
+import { useDebounce } from "./hooks/useDebounce";
+import { useEffect } from "react";
 
 function App() {
-  const[state, setState] = useState(0);
-  const prev = usePrev(state);
+
+  const [inputVal, setInputval] = useState("");
+  const debounceVal = useDebounce(inputVal,200);
+
+  function change(e){
+    setInputval(e.target.value)
+  }
+
+  useEffect(() => {
+    console.log("expensive operation")
+  },[debounceVal])
 
   return (
     <div>
-      <p>Current State {state}</p>
-      <button onClick={() => setState(c => c + 1)}>Click me</button>
-      <p>The previous value was {prev}</p>
+      <input type="text" onChange={change}></input>
     </div>
   )
 }
